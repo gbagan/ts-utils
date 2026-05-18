@@ -1,0 +1,22 @@
+{
+  "name": "@gbagan/utils",
+  "version": "0.1.0",
+  "description": "utils for my projects",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [ "dist/**/*" ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "utils",
+    "typescript"
+  ]
+}
