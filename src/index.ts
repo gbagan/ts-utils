@@ -103,7 +103,11 @@ export function partition<A>(xs: readonly A[], f: (x: A) => boolean): [A[], A[]]
 
 
 // Returns the quotient and remainder of n divided by m.
-export const divMod = (n: number, m: number): [number, number] => [Math.floor(n / m), n % m];
+// m must a positive integer. The remainder is always non-negative.
+export function divMod(n: number, m: number): [number, number] {
+  const r = n % m;
+  return [Math.floor(n / m), r < 0 ? r + m : r];
+}
 
 
 
