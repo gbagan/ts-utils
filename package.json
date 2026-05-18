@@ -1,13 +1,23 @@
 {
   "name": "@gbagan/utils",
   "version": "0.1.0",
-  "description": "utils for my projects",
+  "description": "Utility functions for my TypeScript projects",
   "license": "MIT",
-  "author": "",
+  "author": "Guillaume Bagan",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [ "dist/**/*" ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gbagan/ts-utils.git"
+  },
   "scripts": {
     "build": "tsup"
   },
