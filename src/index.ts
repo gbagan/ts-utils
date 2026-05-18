@@ -89,7 +89,7 @@ export const maximaBy = <A>(arr: readonly A[], f: (a: A, i: number) => number): 
 
 // Partitions the array into two arrays: the first contains the elements that satisfy the predicate,
 // and the second contains the elements that do not.
-export function partition<A>(xs: A[], f: (x: A) => boolean): [A[], A[]] {
+export function partition<A>(xs: readonly A[], f: (x: A) => boolean): [A[], A[]] {
   const yes: A[] = [];
   const no: A[] = [];
   const n = xs.length;
