@@ -23,12 +23,12 @@ export function range(start: number, end: number, step?: number): number[] {
 
 // Returns an array of the results of applying f to each element of the input array,
 // excluding any null results.
-export function filterMap<A, B>(arr: readonly A[], f: (x: A, i: number) => B | null): B[] {
+export function filterMap<A, B>(arr: readonly A[], f: (x: A, i: number) => B | null | undefined): B[] {
   const res: B[] = [];
   const n = arr.length;
   for (let i = 0; i < n; i++) {
     const x = f(arr[i]!, i);
-    if (x !== null) {
+    if (x != null) {
       res.push(x);
     }
   }
@@ -49,8 +49,8 @@ export function count<A>(arr: readonly A[], pred: (x: A, i: number) => boolean):
 }
 
 // Returns the element of the array that minimizes the given function. Returns null if the array is empty.
-export function minBy<A>(arr: readonly A[], fn: (x: A, i: number) => number) {
-  let min = null;
+export function minBy<A>(arr: readonly A[], fn: (x: A, i: number) => number): A | undefined {
+  let min = undefined;
   let bestScore = Infinity;
   const n = arr.length;
   for (let i = 0; i < n; i++) {
@@ -98,6 +98,24 @@ export function partition<A>(xs: readonly A[], f: (x: A) => boolean): [A[], A[]]
     if (f(x)) { yes.push(x) } else  { no.push(x) };
   }
   return [yes, no];
+}
+
+export function sum(arr: readonly number[]): number {
+  let total = 0;
+  const n = arr.length;
+  for (let i = 0; i < n; i++) {
+    total += arr[i]!;
+  }
+  return total;
+}
+
+export function sumBy<A>(arr: readonly A[], fn: (val: A, i: number) => number): number {
+  let total = 0;
+  const n = arr.length;
+  for (let i = 0; i < n; i++) {
+    total += fn(arr[i]!, i);
+  }
+  return total;
 }
 
 
