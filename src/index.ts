@@ -1,11 +1,17 @@
-// Returns an array of length n where every element is val.
+/**
+ * Returns an array of length n where every element is val.
+ */
 export const arrayOf = <A>(n: number, val: A): A[] => new Array(n).fill(val);
 
-// Returns an array of length n where the i-th element is f(i).
+/**
+ * Returns an array of length n where the i-th element is f(i).
+ */
 export const times = <A>(n: number, f: (i: number) => A): A[] => Array.from({ length: n }, (_, i) => f(i));
 
-// Returns an array of numbers from start (inclusive) to end (exclusive) with a step of step.
-// If step is not provided, it defaults to 1.
+/**
+ *  Returns an array of numbers from start (inclusive) to end (exclusive) with a step of step.
+ * If step is not provided, it defaults to 1.
+ */
 export function range(start: number, end: number, step?: number): number[] {
   const res = [];
   step = step ?? 1;
@@ -21,8 +27,10 @@ export function range(start: number, end: number, step?: number): number[] {
   return res
 }
 
-// Returns an array of the results of applying f to each element of the input array,
-// excluding any null results.
+/**
+ * Returns an array of the results of applying f to each element of the input array,
+ * excluding any null or undefined results.
+ */
 export function filterMap<A, B>(arr: readonly A[], f: (x: A, i: number) => B | null | undefined): B[] {
   const res: B[] = [];
   const n = arr.length;
@@ -36,19 +44,23 @@ export function filterMap<A, B>(arr: readonly A[], f: (x: A, i: number) => B | n
 }
 
 
-// Counts the number of elements in the array that satisfy the given predicate.
+/**
+ * Counts the number of elements in the array that satisfy the given predicate.
+ */
 export function count<A>(arr: readonly A[], pred: (x: A, i: number) => boolean): number {
-  let count = 0;
+  let total = 0;
   const n = arr.length;
   for (let i = 0; i < n; i++) {
     if (pred(arr[i]!, i)) {
-      count += 1;
+      total += 1;
     }
   }
-  return count;
+  return total;
 }
 
-// Returns the element of the array that minimizes the given function. Returns null if the array is empty.
+/**
+ * Returns the element of the array that minimizes the given function. Returns null if the array is empty.
+ */
 export function minBy<A>(arr: readonly A[], fn: (x: A, i: number) => number): A | undefined {
   let min = undefined;
   let bestScore = Infinity;
@@ -64,11 +76,15 @@ export function minBy<A>(arr: readonly A[], fn: (x: A, i: number) => number): A 
   return min;
 }
 
-// Returns the element of the array that maximizes the given function. Returns null if the array is empty.
+/**
+ * Returns the element of the array that maximizes the given function. Returns null if the array is empty.
+ */
 export const maxBy = <A>(arr: readonly A[], fn: (x: A, i: number) => number) => minBy(arr, (x, i) => -fn(x, i))
 
-// Returns an array of the elements of the input array that maximize the given function.
-// Returns an empty array if the input array is empty.
+/**
+ * Returns an array of the elements of the input array that maximize the given function.
+ * Returns an empty array if the input array is empty.
+ */
 export const maximaBy = <A>(arr: readonly A[], f: (a: A, i: number) => number): A[] => {
   let maxVal = -Infinity;
   const res: A[] = [];
@@ -87,8 +103,10 @@ export const maximaBy = <A>(arr: readonly A[], f: (a: A, i: number) => number): 
   return res;
 }
 
-// Partitions the array into two arrays: the first contains the elements that satisfy the predicate,
-// and the second contains the elements that do not.
+/** 
+ * Partitions the array into two arrays: the first contains the elements that satisfy the predicate,
+ * and the second contains the elements that do not.
+ */
 export function partition<A>(xs: readonly A[], f: (x: A) => boolean): [A[], A[]] {
   const yes: A[] = [];
   const no: A[] = [];
@@ -109,6 +127,9 @@ export function sum(arr: readonly number[]): number {
   return total;
 }
 
+/**
+ * Returns the sum of fn applied to each element of arr.
+ */
 export function sumBy<A>(arr: readonly A[], fn: (val: A, i: number) => number): number {
   let total = 0;
   const n = arr.length;
@@ -118,16 +139,27 @@ export function sumBy<A>(arr: readonly A[], fn: (val: A, i: number) => number): 
   return total;
 }
 
+/**
+ * Clamps a value between a minimum and maximum bound.
+ * Returns min if value is NaN.
+ */
+export function clamp(value: number, min: number, max: number) {
+  if (isNaN(value)) return min;
+  return Math.min(Math.max(value, min), max);
+}
 
 
-// Returns the quotient and remainder of n divided by m.
-// m must a positive integer. The remainder is always non-negative.
+/**
+ * Returns the quotient and remainder of n divided by m.
+ * m must a positive integer. The remainder is always non-negative.
+ */
 export function divMod(n: number, m: number): [number, number] {
   const r = n % m;
   return [Math.floor(n / m), r < 0 ? r + m : r];
 }
 
 
-
-// Returns a promise that resolves after ms milliseconds.
+/**
+ * Returns a promise that resolves after ms milliseconds.
+ */
 export const sleep = <A>(ms: number) => new Promise<A>(resolve => setTimeout(resolve, ms));
