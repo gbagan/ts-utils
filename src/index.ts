@@ -4,27 +4,17 @@
 export const arrayOf = <A>(n: number, val: A): A[] => new Array(n).fill(val);
 
 /**
- * Returns an array of length n where the i-th element is f(i).
+ * Counts the number of elements in the array that satisfy the given predicate.
  */
-export const times = <A>(n: number, f: (i: number) => A): A[] => Array.from({ length: n }, (_, i) => f(i));
-
-/**
- *  Returns an array of numbers from start (inclusive) to end (exclusive) with a step of step.
- * If step is not provided, it defaults to 1.
- */
-export function range(start: number, end: number, step?: number): number[] {
-  const res = [];
-  step = step ?? 1;
-  if (step > 0) {
-    for (let i = start; i < end; i += step) {
-      res.push(i);
-    }
-  } else {
-    for (let i = start; i > end; i += step) {
-      res.push(i);
+export function count<A>(arr: readonly A[], pred: (x: A, i: number) => boolean): number {
+  let total = 0;
+  const n = arr.length;
+  for (let i = 0; i < n; i++) {
+    if (pred(arr[i]!, i)) {
+      total += 1;
     }
   }
-  return res
+  return total;
 }
 
 /**
@@ -41,39 +31,6 @@ export function filterMap<A, B>(arr: readonly A[], f: (x: A, i: number) => B | n
     }
   }
   return res;
-}
-
-
-/**
- * Counts the number of elements in the array that satisfy the given predicate.
- */
-export function count<A>(arr: readonly A[], pred: (x: A, i: number) => boolean): number {
-  let total = 0;
-  const n = arr.length;
-  for (let i = 0; i < n; i++) {
-    if (pred(arr[i]!, i)) {
-      total += 1;
-    }
-  }
-  return total;
-}
-
-/**
- * Returns the element of the array that minimizes the given function. Returns null if the array is empty.
- */
-export function minBy<A>(arr: readonly A[], fn: (x: A, i: number) => number): A | undefined {
-  let min = undefined;
-  let bestScore = Infinity;
-  const n = arr.length;
-  for (let i = 0; i < n; i++) {
-    const x = arr[i]!;
-    const score = fn(x, i);
-    if (score < bestScore) {
-      bestScore = score;
-      min = x;
-    } 
-  }
-  return min;
 }
 
 /**
@@ -103,6 +60,24 @@ export const maximaBy = <A>(arr: readonly A[], f: (a: A, i: number) => number): 
   return res;
 }
 
+/**
+ * Returns the element of the array that minimizes the given function. Returns null if the array is empty.
+ */
+export function minBy<A>(arr: readonly A[], fn: (x: A, i: number) => number): A | undefined {
+  let min = undefined;
+  let bestScore = Infinity;
+  const n = arr.length;
+  for (let i = 0; i < n; i++) {
+    const x = arr[i]!;
+    const score = fn(x, i);
+    if (score < bestScore) {
+      bestScore = score;
+      min = x;
+    } 
+  }
+  return min;
+}
+
 /** 
  * Partitions the array into two arrays: the first contains the elements that satisfy the predicate,
  * and the second contains the elements that do not.
@@ -116,6 +91,36 @@ export function partition<A>(xs: readonly A[], f: (x: A) => boolean): [A[], A[]]
     if (f(x)) { yes.push(x) } else  { no.push(x) };
   }
   return [yes, no];
+}
+
+
+/**
+ *  Returns an array of numbers from start (inclusive) to end (exclusive) with a step of step.
+ * If step is not provided, it defaults to 1.
+ */
+export function range(start: number, end: number, step?: number): number[] {
+  const res = [];
+  step = step ?? 1;
+  if (step > 0) {
+    for (let i = start; i < end; i += step) {
+      res.push(i);
+    }
+  } else {
+    for (let i = start; i > end; i += step) {
+      res.push(i);
+    }
+  }
+  return res
+}
+
+/**
+ * Returns a new array with one or more elements replaced at given indices.
+ * Does not mutate the original array.
+ */
+export function replaceAt<A>(arr: readonly A[], ...pairs: [number, A][]): A[] {
+  const result = [...arr];
+  for (const [i, v] of pairs) result[i] = v;
+  return result;
 }
 
 /**
@@ -145,10 +150,15 @@ export function sumBy<A>(arr: readonly A[], fn: (val: A, i: number) => number): 
 }
 
 /**
+ * Returns an array of length n where the i-th element is f(i).
+ */
+export const times = <A>(n: number, f: (i: number) => A): A[] => Array.from({ length: n }, (_, i) => f(i));
+
+/**
  * Combines two arrays element-by-element using a provided function,
  * stopping at the length of the shortest array.
  */
-export function zipWith<A, B, C>(xs: A[], ys: B[], fn: (x: A, y: B) => C): C[] {
+export function zipWith<A, B, C>(xs: readonly A[], ys: readonly B[], fn: (x: A, y: B) => C): C[] {
   const n = Math.min(xs.length, ys.length);
   const res = new Array(n);
   for (let i = 0; i < n; i++) {
@@ -217,6 +227,12 @@ export function divMod(n: number, m: number): [number, number] {
   const r = n % m;
   return [Math.floor(n / m), r < 0 ? r + m : r];
 }
+
+export const add = (x: number) => (y: number) => x + y;
+export const dec = (x: number) => x - 1;
+export const inc = (x: number) => x + 1;
+export const not = (x: boolean) => !x;
+
 
 /**
  * Returns a promise that resolves after ms milliseconds.
