@@ -118,6 +118,10 @@ export function partition<A>(xs: readonly A[], f: (x: A) => boolean): [A[], A[]]
   return [yes, no];
 }
 
+/**
+ * Returns the sum of all elements in an array.
+ * Returns 0 for an empty array.
+ */
 export function sum(arr: readonly number[]): number {
   let total = 0;
   const n = arr.length;
@@ -129,6 +133,7 @@ export function sum(arr: readonly number[]): number {
 
 /**
  * Returns the sum of fn applied to each element of arr.
+ * Returns 0 for an empty array.
  */
 export function sumBy<A>(arr: readonly A[], fn: (val: A, i: number) => number): number {
   let total = 0;
@@ -140,6 +145,62 @@ export function sumBy<A>(arr: readonly A[], fn: (val: A, i: number) => number): 
 }
 
 /**
+ * Combines two arrays element-by-element using a provided function,
+ * stopping at the length of the shortest array.
+ */
+export function zipWith<A, B, C>(xs: A[], ys: B[], fn: (x: A, y: B) => C): C[] {
+  const n = Math.min(xs.length, ys.length);
+  const res = new Array(n);
+  for (let i = 0; i < n; i++) {
+    res[i] = fn(xs[i]!, ys[i]!);
+  }
+  return res;
+}
+
+type PathValue<T, P extends readonly (string | number)[]> =
+  P extends readonly []
+  ? T
+  : P extends readonly [infer K, ...infer Rest extends (string | number)[]]
+  ? K extends keyof T ? PathValue<T[K], Rest> : never
+  : never;
+
+/**
+ * Returns a new object with the value at `path` replaced by `val`.
+ * All other nodes are left untouched (shallow copies are made along the path).
+ */
+export function set<T, const  P extends readonly (string | number)[]>(
+  obj: T,
+  path: P,
+  val: PathValue<T, P>
+): T {
+  return update(obj, path, () => val);
+}
+
+/**
+ * Returns a new object with the value at `path` replaced by `updater(currentValue)`.
+ * All other nodes are left untouched (shallow copies are made along the path).
+ */
+export function update<T, const P extends readonly (string | number)[]>(
+  obj: T,
+  path: P,
+  updater: (x: PathValue<T, P>) => PathValue<T, P>
+): T {
+  const result: T = Array.isArray(obj) ? [...(obj as any)] : { ...(obj as any) };
+  let current: any = result;
+
+  for (let i = 0; i < path.length - 1; i++) {
+    const key = path[i]!;
+    current[key] = Array.isArray(current[key]) ? [...current[key]] : { ...current[key] };
+    current = current[key];
+  }
+
+  const lastKey = path[path.length - 1]!;
+  current[lastKey] = updater(current[lastKey]);
+
+  return result;
+}
+
+/**
  * Clamps a value between a minimum and maximum bound.
  * Returns min if value is NaN.
  */
@@ -147,7 +208,6 @@ export function clamp(value: number, min: number, max: number) {
   if (isNaN(value)) return min;
   return Math.min(Math.max(value, min), max);
 }
-
 
 /**
  * Returns the quotient and remainder of n divided by m.
@@ -157,7 +217,6 @@ export function divMod(n: number, m: number): [number, number] {
   const r = n % m;
   return [Math.floor(n / m), r < 0 ? r + m : r];
 }
-
 
 /**
  * Returns a promise that resolves after ms milliseconds.
